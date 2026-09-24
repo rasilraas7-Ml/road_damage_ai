@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Analysis Result | RoadGuard AI
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body class="result-page">
+
+
+<!-- =====================================================
+     NAVBAR
+====================================================== -->
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <a
+            href="{{ url_for('index') }}"
+            class="logo"
+        >
+
+            <span class="logo-icon">
+                ◉
+            </span>
+
+            <span>
+                RoadGuard
+                <span class="logo-ai">
+                    AI
+                </span>
+            </span>
+
+        </a>
+
+
+        <div class="nav-links">
+
+            <a href="{{ url_for('index') }}#home">
+                Home
+            </a>
+
+            <a href="{{ url_for('index') }}#analysis">
+                Analysis
+            </a>
+
+            <a href="{{ url_for('index') }}#camera">
+                Live Camera
+            </a>
+
+            <a href="{{ url_for('index') }}#how-it-works">
+                How It Works
+            </a>
+
+        </div>
+
+
+        <div class="nav-status">
+
+            <span class="status-dot"></span>
+
+            AI System Online
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     RESULT HERO
+====================================================== -->
+
+<main class="result-main">
+
+
+    <section class="result-section">
+
+        <div class="result-container">
+
+
+            <!-- =================================================
+                 PAGE HEADER
+            ================================================== -->
+
+            <div class="result-heading">
+
+                <div class="section-label">
+                    ANALYSIS COMPLETE
+                </div>
+
+
+                <h1>
+                    Road Damage
+                    <span>
+                        Analysis
+                    </span>
+                </h1>
+
+
+                <p>
+                    The AI model has finished analyzing
+                    your road image.
+                </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RESULT GRID
+            ================================================== -->
+
+            <div class="result-grid">
+
+
+                <!-- =============================================
+                     IMAGE CARD
+                ============================================== -->
+
+                <div class="result-image-card">
+
+                    <div class="result-card-header">
+
+                        <div>
+
+                            <span class="result-card-label">
+                                DETECTED IMAGE
+                            </span>
+
+                            <h2>
+                                AI Detection Result
+                            </h2>
+
+                        </div>
+
+
+                        <div class="result-status">
+
+                            <span></span>
+
+                            ANALYZED
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="result-image-wrapper">
+
+                        <img
+                            src="{{ result_image }}"
+                            alt="Road pothole detection result"
+                            class="result-image"
+                        >
+
+                    </div>
+
+
+                    <div class="image-caption">
+
+                        <span class="legend-box"></span>
+
+                        Green bounding boxes indicate
+                        detected potholes.
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =============================================
+                     SUMMARY CARD
+                ============================================== -->
+
+                <div class="summary-card">
+
+                    <div class="result-card-label">
+                        DETECTION SUMMARY
+                    </div>
+
+
+                    <h2>
+                        AI Analysis
+                    </h2>
+
+
+                    <!-- POTHOLE COUNT -->
+
+                    <div class="main-detection">
+
+                        <div class="main-detection-icon">
+                            AI
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                POTHOLES DETECTED
+                            </span>
+
+                            <strong>
+                                {{ detection_count }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- CONFIDENCE -->
+
+                    <div class="confidence-block">
+
+                        <div class="metric-heading">
+
+                            <span>
+                                Average Confidence
+                            </span>
+
+                            <strong>
+                                {{ "%.1f"|format(average_confidence * 100) }}%
+                            </strong>
+
+                        </div>
+
+
+                        <div class="confidence-bar">
+
+                            <div
+                                class="confidence-fill"
+                                style="width: {{ (average_confidence * 100)|round(1) }}%;"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- HIGHEST CONFIDENCE -->
+
+                    <div class="metric-row">
+
+                        <div class="metric-icon">
+                            ↑
+                        </div>
+
+                        <div class="metric-content">
+
+                            <span>
+                                Highest Confidence
+                            </span>
+
+                            <strong>
+                                {{ "%.1f"|format(highest_confidence * 100) }}%
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- IMAGE SIZE -->
+
+                    <div class="metric-row">
+
+                        <div class="metric-icon">
+                            IMG
+                        </div>
+
+                        <div class="metric-content">
+
+                            <span>
+                                Image Resolution
+                            </span>
+
+                            <strong>
+                                {{ image_width }} × {{ image_height }} px
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- MODEL -->
+
+                    <div class="metric-row">
+
+                        <div class="metric-icon">
+                            AI
+                        </div>
+
+                        <div class="metric-content">
+
+                            <span>
+                                Detection Model
+                            </span>
+
+                            <strong>
+                                Faster R-CNN
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- THRESHOLD -->
+
+                    <div class="metric-row">
+
+                        <div class="metric-icon">
+                            %
+                        </div>
+
+                        <div class="metric-content">
+
+                            <span>
+                                Detection Threshold
+                            </span>
+
+                            <strong>
+                                40%
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 DETECTION DETAILS
+            ================================================== -->
+
+            <section class="detection-details">
+
+
+                <div class="details-heading">
+
+                    <div>
+
+                        <div class="section-label">
+                            DETECTION DETAILS
+                        </div>
+
+                        <h2>
+                            Detected Potholes
+                        </h2>
+
+                    </div>
+
+
+                    <div class="detection-count-badge">
+
+                        {{ detection_count }}
+
+                        Detection{% if detection_count != 1 %}s{% endif %}
+
+                    </div>
+
+                </div>
+
+
+
+                {% if detections %}
+
+                <div class="detection-list">
+
+
+                    {% for detection in detections %}
+
+                    <div class="detection-card">
+
+
+                        <div class="detection-number">
+
+                            {{ "%02d"|format(loop.index) }}
+
+                        </div>
+
+
+                        <div class="detection-info">
+
+                            <div class="detection-title">
+
+                                <span class="detection-dot"></span>
+
+                                Pothole Detection
+
+                            </div>
+
+
+                            <p>
+                                Bounding box identified
+                                by the AI object detection model.
+                            </p>
+
+                        </div>
+
+
+                        <div class="detection-confidence">
+
+                            <span>
+                                CONFIDENCE
+                            </span>
+
+                            <strong>
+                                {{ "%.1f"|format(detection.confidence * 100) }}%
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                    {% endfor %}
+
+
+                </div>
+
+                {% else %}
+
+
+                <!-- NO DETECTION -->
+
+                <div class="no-detection">
+
+                    <div class="no-detection-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            No potholes detected
+                        </h3>
+
+                        <p>
+                            The model did not find any
+                            potholes above the 40% confidence
+                            threshold.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 ACTIONS
+            ================================================== -->
+
+            <div class="result-actions">
+
+
+                <a
+                    href="{{ url_for('index') }}#analysis"
+                    class="result-primary-button"
+                >
+
+                    <span>
+                        ↻
+                    </span>
+
+                    Analyze Another Image
+
+                </a>
+
+
+                <a
+                    href="{{ result_image }}"
+                    download="roadguard_detection_result.jpg"
+                    class="result-secondary-button"
+                >
+
+                    <span>
+                        ↓
+                    </span>
+
+                    Download Result
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('index') }}"
+                    class="result-back-button"
+                >
+
+                    ← Back to Home
+
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 FOOTNOTE
+            ================================================== -->
+
+            <div class="result-footnote">
+
+                <span class="footnote-dot"></span>
+
+                Analysis performed using
+                PyTorch Faster R-CNN on CPU.
+
+                <span class="footnote-separator">
+                    •
+                </span>
+
+                Confidence threshold:
+                40%
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div class="footer-bottom">
+
+            <span>
+                RoadGuard AI • Computer Vision Project
+            </span>
+
+            <span>
+                Built with Python, PyTorch & OpenCV
+            </span>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>
